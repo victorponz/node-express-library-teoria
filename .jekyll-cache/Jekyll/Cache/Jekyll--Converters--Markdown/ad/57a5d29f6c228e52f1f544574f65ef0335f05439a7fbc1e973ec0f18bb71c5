@@ -1,0 +1,24 @@
+I"�<ul id="menuFixed" class="typora-menu-hidden">
+  <li><a href="#instalación-de-node">Instalación de node</a></li>
+  <li><a href="#qué-son-express-y-node">¿Qué son Express y Node?</a></li>
+  <li><a href="#dónde-comenzó">¿Dónde comenzó?</a></li>
+  <li><a href="#qué-popularidad-tiene-nodeexpress">¿Qué popularidad tiene Node/Express?</a></li>
+  <li><a href="#es-express-dogmático">¿Es Express dogmático?</a></li>
+  <li><a href="#cómo-es-el-código-para-express">¿Cómo es el código para Express?</a>
+    <ul>
+      <li><a href="#hola-mundo---en-express">Hola Mundo! - en Express</a></li>
+      <li><a href="#importando-y-creando-módulos">Importando y creando módulos</a></li>
+      <li><a href="#usando-apis-asíncronas">Usando APIs asíncronas</a></li>
+      <li><a href="#creando-manejadores-de-rutas">Creando manejadores de rutas</a></li>
+      <li><a href="#usando-middleware">Usando middleware</a></li>
+      <li><a href="#sirviendo-archivos-estáticos">Sirviendo archivos estáticos</a></li>
+      <li><a href="#manejando-errores">Manejando errores</a></li>
+      <li><a href="#usando-bases-de-datos">Usando Bases de datos</a></li>
+      <li><a href="#renderización-de-data-vistas">Renderización de data (vistas)</a></li>
+      <li><a href="#estructura-de-archivos">Estructura de Archivos</a></li>
+    </ul>
+  </li>
+  <li><a href="#resumen">Resumen</a></li>
+  <li><a href="#ver-también">Ver también</a></li>
+</ul>
+:ET
