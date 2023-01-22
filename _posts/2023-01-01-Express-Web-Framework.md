@@ -45,7 +45,8 @@ En este primer articulo de Express resolveremos las preguntas "¿Qué es Node?" 
 Para instalar `node.js` 
 
 ```
-sudo apt install nodejs
+curl -sL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+sudo apt-get install -y nodejs
 ```
 
 Y para instalar el gestor de paquetes `nmp` 
@@ -168,9 +169,9 @@ El bloque final de código, define y crea el servidor, escuchando el puerto 3000
 
 ### Importando y creando módulos
 
-Un modulo es una librería o archivo JavaScript que puede ser importado dentro de otro código utilizando la función `require()` de Node. Por sí mismo, _Express_ es un modulo, como lo son el middleware y las librerías de bases de datos que se utilizan en las aplicaciones _Express._
+Un módulo es una librería o archivo JavaScript que puede ser importado dentro de otro código utilizando la función `require()` de Node. Por sí mismo, _Express_ es un módulo, como lo son el middleware y las librerías de bases de datos que se utilizan en las aplicaciones _Express._
 
-El código mostrado abajo, muestra como puede importarse un modulo con base a su nombre, como ejemplo se utiliza el framework _Express_ . Primero se invoca la función `require()`, indicando como parámetro el nombre del módulo o librería como una cadena (`'express'`), posteriormente se invoca el objeto obtenido para crear una [aplicación Express](https://expressjs.com/en/4x/api.html#app).
+El código mostrado abajo, muestra como puede importarse un módulo con base a su nombre, como ejemplo se utiliza el framework _Express_ . Primero se invoca la función `require()`, indicando como parámetro el nombre del módulo o librería como una cadena (`'express'`), posteriormente se invoca el objeto obtenido para crear una [aplicación Express](https://expressjs.com/en/4x/api.html#app).
 
 Posteriormente, se puede acceder a las propiedades y funciones del objeto Aplicación.
 
@@ -183,7 +184,7 @@ También podemos crear nuestros propios módulos que puedan posteriormente ser i
 
 > -info-Usted puede desear crear sus propios módulos, esto le permitirá organizar su código en partes más administrables; una aplicación que reside en un solo archivo es difícil de entender y manejar.El utilizar módulos independientes también le permite administrar el espacio de nombres, de esta manera unicamente las variables que exporte explícitamente son importadas cuando utilice un módulo.
 
-Para hacer que los objetos esten disponibles fuera de un modulo, solamente es necesario asignarlos al objeto `exports`. Por ejemplo, el modulo mostrado a continuación **square.js** es un archivo que exporta los métodos `area()` y `perimeter()` :
+Para hacer que los objetos estén disponibles fuera de un módulo, solamente es necesario asignarlos al objeto `exports`. Por ejemplo, el módulo mostrado a continuación **square.js** es un archivo que exporta los métodos `area()` y `perimeter()` :
 
 ```js
 exports.area = function(width) { return width * width; };
@@ -239,7 +240,7 @@ Usar APIs asíncronas sin bloques es aun mas importante en _Node_ que en el nave
 
 Hay muchas maneras para una API asincrónica de notificar a su aplicación que se ha completado. La manera mas común es registrar una función callback cuando usted invoca a una API asincrónica, la misma será llamada de vuelta cuando la operación se complete. Éste es el enfoque utilizado anteriormente.
 
->-info- Usar "callbacks" puede ser un poco enmarañado si usted tiene una secuencia de operaciones asíncronas dependientes que deben ser llevadas a cabo en orden, porque esto resulta en múltiples niveles de "callbacks" anidadas. Este problema es comúnmente conocido como "callback hell" (callback del infierno). Este problema puede ser reducido con buenas practicas de código (vea <http://callbackhell.com/>), usando un modulo como [async](https://www.npmjs.com/package/async), o incluso avanzando a características de ES6 como las [promesas](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+>-info- Usar "callbacks" puede ser un poco enmarañado si usted tiene una secuencia de operaciones asíncronas dependientes que deben ser llevadas a cabo en orden, porque esto resulta en múltiples niveles de "callbacks" anidadas. Este problema es comúnmente conocido como "callback hell" (callback del infierno). Este problema puede ser reducido con buenas practicas de código (vea <http://callbackhell.com/>), usando un módulo como [async](https://www.npmjs.com/package/async), o incluso avanzando a características de ES6 como las [promesas](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Promise).
 
 >-info-Una convención común para _Node_ y _Express_ es usar callbacks de error primero. En esta convención el primer valor en su función callback es un error, mientras que los argumentos subsecuentes contienen datos correctos. Hay una buena explicación de porque este enfoque es útil en este blog: [The Node.js Way - Understanding Error-First Callbacks](http://fredkschott.com/post/2014/03/understanding-error-first-callbacks-in-node-js) (fredkschott.com).
 
@@ -293,7 +294,7 @@ module.exports = router;
 
 > -info-Agregar rutas al objeto `Router` es como agregar rutas al objeto `app` (como se vio anteriormente).
 
-Para usar el router en nuestro archivo app principal, necesitamos `require()` el módulo de rutas (**wiki.js**), entonces llame `use()` en la aplicación _Express_ para agregar el Router al software intermediario que maneja las rutas. Las dos rutas serán accesibles entonces desde `/wiki/` y `/wiki/about/`.
+Para usar el router en nuestro archivo app principal, necesitamos `require()` el módulo de rutas (**wiki.js**), entonces llama a `use()` en la aplicación _Express_ para agregar el Router al software intermediario que maneja las rutas. Las dos rutas serán accesibles entonces desde `/wiki/` y `/wiki/about/`.
 
 ```js
 var wiki = require('./wiki.js');
@@ -317,7 +318,7 @@ Para usar estas colecciones, primero ha de instalar la aplicación usando NPM. P
 npm install morgan
 ```
 
-Entonces podría llamar a la función `use()` en un objeto de aplicación _Express_ para utilizar este middleware a su aplicación.
+Entonces podrías llamar a la función `use()` en un objeto de aplicación _Express_ para utilizar este middleware a su aplicación.
 
 ```js
 var express = require('express');
@@ -331,7 +332,7 @@ app.use(logger('dev'));
 
 Tu puedes escribir tu propia funcion middleware, y si quieres hacerlo así (solo para crear código de manejo de error). La única diferencia entre una función middleware y un callback manejador de rutas es que las funciones middleware tienen un tercer argumento `next`, cuyas funciones middleware son esperadas para llamarlas si ellas no completan el ciclo request (cuando la función midleware es llamada, esta contiene la próxima función que debe ser llamada).
 
-Puede agregar una función middleware a la cadenan de procesamiento con cualquier `app.use()` o `app.add()`, dependiendo de si quiere aplicar el middleware a todas las respuestas o a respuestas con un verbo particular HTTP (`GET`, `POST`, etc). Usted especifica rutas, lo mismo en ambos casos, aunque la ruta es opcional cuando llama **app.use()**.
+Puedes agregar una función middleware a la cadena de procesamiento con cualquier `app.use()` o `app.add()`, dependiendo de si quiere aplicar el middleware a todas las respuestas o a respuestas con un verbo particular HTTP (`GET`, `POST`, etc). Usted especifica rutas, lo mismo en ambos casos, aunque la ruta es opcional cuando llama **app.use()**.
 
 El ejemplo de abajo muestra como puede agregar la función middleware usando ambos métodos, y con/sin una ruta.
 
@@ -385,7 +386,7 @@ app.use(express.static('public'));
 app.use(express.static('media'));
 ```
 
-Tambien puede crear un prefijo virtual para sus URLs estáticas, aun más teniendo los archivos agregados en la ubicación URL. Por ejemplo, aqui especificamos [a mount path](http://expressjs.com/en/4x/api.html#app.use) tal que los archivos son bajados con el prefijo "/media":
+También puede crear un prefijo virtual para sus URLs estáticas, aun más teniendo los archivos agregados en la ubicación URL. Por ejemplo, aqui especificamos [a mount path](http://expressjs.com/en/4x/api.html#app.use) tal que los archivos son bajados con el prefijo "/media":
 
 ```js
 app.use('/media', express.static('public'));
@@ -418,7 +419,7 @@ Express viene con un manejador de error integrado, el que se ocupa de error rema
 
 > -info-El rastreo de pila no esta incluido en el ambiente de producción. Para ejecutarlo en modo de producción necesita configurar la variable de ambiente `NODE_ENV` to '`production'`.
 >
-> HTTP404 y otros codigos de estatus de "error" no son tratados como errores. Si quiere manejar estos, puede agregar una función middleware para hacerlo. Para mas información vea las [FAQ](http://expressjs.com/en/starter/faq.html#how-do-i-handle-404-responses).
+> HTTP404 y otros códigos de estatus de "error" no son tratados como errores. Si quiere manejar estos, puede agregar una función middleware para hacerlo. Para mas información vea las [FAQ](http://expressjs.com/en/starter/faq.html#how-do-i-handle-404-responses).
 
 Para mayor información vea Manejo de error (Docs. Express).
 
@@ -477,7 +478,7 @@ app.get('/', function(req, res) {
 });
 ```
 
-Para más información vea [Usando motores de plantillas con Express](http://expressjs.com/en/guide/using-template-engines.html) (docs Express ).
+Para más información vea [Usando motores de plantillas con Express](http://expressjs.com/en/guide/using-template-engines.html).
 
 ### Estructura de Archivos
 
