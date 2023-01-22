@@ -732,7 +732,7 @@ Eso es. ¡Ya tenemos todos los modelos para el sitio configurados!
 
 Para probar los modelos (y crear algunos libros de ejemplo y otros elementos que podemos usar en nuestros próximos artículos), ahora ejecutaremos un script independiente para crear elementos de cada tipo:
 
-1. Descarga el archivo [populatedb.js](node-express-library-teoria/assests/populatedb.js) dentro de tu directorio express-locallibrary-tutorial (en el mismo nivel que package.json).
+1. Descarga el archivo [populatedb.js](/node-express-library-teoria/assets/populatedb.js) dentro de tu directorio express-locallibrary-tutorial (en el mismo nivel que package.json).
 
 2. Introduce los siguientes comandos en la raíz del proyecto para instalar el módulo `async` que requiere el script 
 
