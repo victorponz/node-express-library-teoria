@@ -2,7 +2,7 @@
 typora-copy-images-to: ../assets/img/
 typora-root-url: ../../
 layout: post
-title: 'Tutorial Express - parte 1: Esqueleto de la aplicación'
+title: 'Tutorial Express - parte 2: Esqueleto de la aplicación'
 categories: parte1
 conToc: true
 permalink: esqueleto-de-la-aplicacion
