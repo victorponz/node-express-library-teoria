@@ -657,3 +657,287 @@ Modifica la vista para que ahora renderice esta propiedad virtual.
 > -reto-Crea la página para listar los géneros
 
 ![image-20230124192352341](/node-express-library-teoria/assets/img/image-20230124192352341.png)
+
+## Página detalle de género
+
+La página de detalles del género debe mostrar la información de una instancia de género en particular, utilizando su valor de campo `_id` generado automáticamente como identificador. La página debe mostrar el nombre del género y una lista de todos los libros del género con enlaces a la página de detalles de cada libro.
+
+### Controlador
+
+Abre `/controllers/genreController.js` e importa los módulos `async` y `Book` en la parte superior del archivo.
+
+```javascript
+const Book = require("../models/book");
+const async = require("async");
+```
+
+Encuentra el método `genre_detail()` y sustitúyelo por el siguiente código:
+
+```javascript
+// Display detail page for a specific Genre.
+exports.genre_detail = (req, res, next) => {
+  async.parallel(
+    {
+      genre(callback) {
+        Genre.findById(req.params.id).exec(callback);
+      },
+
+      genre_books(callback) {
+        Book.find({ genre: req.params.id }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.genre == null) {
+        // No results.
+        const err = new Error("Genre not found");
+        err.status = 404;
+        return next(err);
+      }
+      // Successful, so render
+      res.render("genre_detail", {
+        title: "Genre Detail",
+        genre: results.genre,
+        genre_books: results.genre_books,
+      });
+    }
+  );
+};
+```
+
+El método usa `async.parallel()` para consultar el nombre del género y sus libros asociados en paralelo, y la devolución de llamada muestra la página cuando (`if`) ambas solicitudes se completan correctamente.
+
+El ID del registro de género requerido se codifica al final de la URL y se extrae automáticamente según la definición de la ruta (`/genre/:id`). Se accede a la ID dentro del controlador a través de los parámetros de solicitud: `req.params.id`. Se usa en `Genre.findById()` para obtener el género actual. También se utiliza para obtener todos los objetos `Book` que tienen el ID de género en su campo de género: `Book.find({ 'genre': req.params.id })`.
+
+> -info-Si el género no existe en la base de datos (es decir, es posible que se haya eliminado), `findById()` volverá correctamente sin resultados. En este caso, queremos mostrar una página "no encontrada", por lo que creamos un objeto de error y lo pasamos a la siguiente función de middleware en la cadena.
+>
+> ```javascript
+> if (results.genre == null) {
+>   // No results.
+>   const err = new Error("Genre not found");
+>   err.status = 404;
+>   return next(err);
+> }
+> ```
+>
+> Luego, el mensaje se propagará a través de nuestro código de manejo de errores (esto se configuró cuando generamos el esqueleto de la aplicación; para obtener más información, consulta [Manejo de errores](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/Introduction#handling_errors)).
+
+La vista renderizada es `gender_detail` y se le pasan variables para el título, el género y la lista de libros de este género (`genre_books`).
+
+### Vista
+
+Crea `views/genre_detail.pug` y pega el siguiente código:
+
+```jade
+extends layout
+
+block content
+
+  h1 Genre: #{genre.name}
+
+  div(style='margin-left:20px;margin-top:20px')
+
+    h4 Books
+
+    dl
+      each book in genre_books
+        dt
+          a(href=book.url) #{book.title}
+        dd #{book.summary}
+
+      else
+        p This genre has no books
+```
+
+### ¿Cómo se ve?
+
+Ejecuta la aplicación y abre el  navegador en [http://localhost:3000/](http://localhost:3000/). Seleccione el enlace `All genres`, luego selecciona uno de los géneros (por ejemplo, "Fantasy"). Si todo está configurado correctamente, la página debería verse como la siguiente captura de pantalla.
+
+![](/node-express-library-teoria/assets/img/locallibary_express_genre_detail.png)
+
+## Página detalle del libro
+
+La página de detalles del libro debe mostrar la información de un libro específico (identificado mediante su valor de campo `_id` generado automáticamente), junto con información sobre cada copia asociada en la biblioteca (`BookInstance`). Dondequiera que mostremos un autor, género o instancia de libro, estos deben estar vinculados a la página de detalles asociada a ese elemento.
+
+### Controlador
+
+Abre `/controllers/bookController.js`. Busca el método de controlador exportado `book_detail()` y reemplácelo con el siguiente código.
+
+```javascript
+// Display detail page for a specific book.
+exports.book_detail = (req, res, next) => {
+  async.parallel(
+    {
+      book(callback) {
+        Book.findById(req.params.id)
+          .populate("author")
+          .populate("genre")
+          .exec(callback);
+      },
+      book_instance(callback) {
+        BookInstance.find({ book: req.params.id }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.book == null) {
+        // No results.
+        const err = new Error("Book not found");
+        err.status = 404;
+        return next(err);
+      }
+      // Successful, so render.
+      res.render("book_detail", {
+        title: results.book.title,
+        book: results.book,
+        book_instances: results.book_instance,
+      });
+    }
+  );
+};
+```
+
+### Vista
+
+Crea `/views/book_detail.pug` y pega el siguiente código:
+
+```jade
+extends layout
+
+block content
+  h1 Title: #{book.title}
+
+  p #[strong Author:]
+    a(href=book.author.url) #{book.author.name}
+  p #[strong Summary:] #{book.summary}
+  p #[strong ISBN:] #{book.isbn}
+  p #[strong Genre:]
+    each val, index in book.genre
+      a(href=val.url) #{val.name}
+      if index < book.genre.length - 1
+        |,
+
+  div(style='margin-left:20px;margin-top:20px')
+    h4 Copies
+
+    each val in book_instances
+      hr
+      if val.status=='Available'
+        p.text-success #{val.status}
+      else if val.status=='Maintenance'
+        p.text-danger #{val.status}
+      else
+        p.text-warning #{val.status}
+      p #[strong Imprint:] #{val.imprint}
+      if val.status!='Available'
+        p #[strong Due back:] #{val.due_back}
+      p #[strong Id:]
+        a(href=val.url) #{val._id}
+
+    else
+      p There are no copies of this book in the library.
+```
+
+> -info-La lista de géneros asociados con el libro se implementa en la plantilla como se muestra a continuación. Esto agrega una coma después de cada género asociado con el libro excepto el último.
+>
+> ```jade
+>   p #[strong Genre:]
+>     each val, index in book.genre
+>       a(href=val.url) #{val.name}
+>       if index < book.genre.length - 1
+>         |,
+> ```
+
+### ¿Cómo se ve?
+
+Ejecuta la aplicación y abre el navegador en [http://localhost:3000/](http://localhost:3000/). Selecciona el enlace  `All books`, luego selecciona uno de los libros. Si todo está configurado correctamente, su página debería verse como la siguiente captura de pantalla.
+
+![Book Detail Page - Express Local Library site](/node-express-library-teoria/assets/img/locallibary_express_book_detail.png)
+
+## Página detalle de autor
+
+La página de detalles del autor debe mostrar la información sobre el autor especificado, identificado mediante su valor de campo `_id` (generado automáticamente), junto con una lista de todos los objetos `Book` asociados con ese autor.
+
+### Controlador 
+
+Abre `controllers/authorControler.js` y pega lo siguiente al principio:
+
+```javascript
+const async = require("async");
+const Book = require("../models/book");
+```
+
+Encuentra el método `author_detail` y sustitúyelo por el siguiente código:
+
+```javascript
+// Display detail page for a specific Author.
+exports.author_detail = (req, res, next) => {
+  async.parallel(
+    {
+      author(callback) {
+        Author.findById(req.params.id).exec(callback);
+      },
+      authors_books(callback) {
+        Book.find({ author: req.params.id }, "title summary").exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        // Error in API usage.
+        return next(err);
+      }
+      if (results.author == null) {
+        // No results.
+        const err = new Error("Author not found");
+        err.status = 404;
+        return next(err);
+      }
+      // Successful, so render.
+      res.render("author_detail", {
+        title: "Author Detail",
+        author: results.author,
+        author_books: results.authors_books,
+      });
+    }
+  );
+};
+```
+
+El método usa `async.parallel()` para consultar al autor y sus instancias de libro asociadas en paralelo, y la devolución de llamada muestra la página cuando (`if`) ambas solicitudes se completan correctamente. El enfoque es exactamente el mismo que se describe en la página de detalles del género anterior.
+
+### Vista
+
+Crea `views/authorDetail.pug` y pega el siguiente código:
+
+```jade
+extends layout
+
+block content
+
+  h1 Author: #{author.name}
+  p #{author.date_of_birth} - #{author.date_of_death}
+
+  div(style='margin-left:20px;margin-top:20px')
+
+    h4 Books
+
+    dl
+      each book in author_books
+        dt
+          a(href=book.url) #{book.title}
+        dd #{book.summary}
+
+      else
+        p This author has no books.
+```
+
+### ¿Cómo se ve?
+
+Ejecuta la aplicación y abre el navegador en [http://localhost:3000/](http://localhost:3000/). Selecciona el enlace  `All authors`, luego selecciona uno de los autores. Si todo está configurado correctamente, la página debería verse como la siguiente captura de pantalla.
+
+![Author Detail Page - Express Local Library site](/node-express-library-teoria/assets/img/locallibary_express_author_detail.png)
+
