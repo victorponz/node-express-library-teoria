@@ -989,3 +989,190 @@ p
   a(href=author.url+'/delete') Delete author
 ```
 
+## Formulario para actualizar el libro
+
+El manejo de formularios al actualizar un libro es muy similar al de la creación de un libro, excepto que debes completar el formulario en la ruta GET con valores de la base de datos.
+
+### Controlador ruta GET
+
+Abre `/controllers/bookController.js`. Busca el método de controlador exportado `book_update_get()` y reemplázalo con el siguiente código.
+
+```javascript
+// Display book update form on GET.
+exports.book_update_get = (req, res, next) => {
+  // Get book, authors and genres for form.
+  async.parallel(
+    {
+      book(callback) {
+        Book.findById(req.params.id)
+          .populate("author")
+          .populate("genre")
+          .exec(callback);
+      },
+      authors(callback) {
+        Author.find(callback);
+      },
+      genres(callback) {
+        Genre.find(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.book == null) {
+        // No results.
+        const err = new Error("Book not found");
+        err.status = 404;
+        return next(err);
+      }
+      // Success.
+      // Mark our selected genres as checked.
+      for (const genre of results.genres) {
+        for (const bookGenre of results.book.genre) {
+          if (genre._id.toString() === bookGenre._id.toString()) {
+            genre.checked = "true";
+          }
+        }
+      }
+      res.render("book_form", {
+        title: "Update Book",
+        authors: results.authors,
+        genres: results.genres,
+        book: results.book,
+      });
+    }
+  );
+};
+```
+
+El controlador obtiene la identificación del libro que se actualizará desde el parámetro de URL (`req.params.id`). Utiliza el método `async.parallel()` para obtener el registro del Libro especificado (rellenando sus campos de género y autor) y listas de todos los objetos `Autor` y `Género`.
+
+Cuando se completan las operaciones, comprueba si hay errores en la operación de búsqueda y también si se encontraron libros.
+
+Luego marcamos los géneros actualmente seleccionados como marcados y luego representamos la vista `book_form.pug`, pasando variables para título, libro, todos los autores y todos los géneros.
+
+### Controlador ruta POST
+
+Busca el método de controlador exportado `book_update_post()` y reemplázalo con el siguiente código:
+
+```javascript
+// Handle book update on POST.
+exports.book_update_post = [
+  // Convert the genre to an array
+  (req, res, next) => {
+    if (!Array.isArray(req.body.genre)) {
+      req.body.genre =
+        typeof req.body.genre === "undefined" ? [] : [req.body.genre];
+    }
+    next();
+  },
+
+  // Validate and sanitize fields.
+  body("title", "Title must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("author", "Author must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("summary", "Summary must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("isbn", "ISBN must not be empty").trim().isLength({ min: 1 }).escape(),
+  body("genre.*").escape(),
+
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    // Create a Book object with escaped/trimmed data and old id.
+    const book = new Book({
+      title: req.body.title,
+      author: req.body.author,
+      summary: req.body.summary,
+      isbn: req.body.isbn,
+      genre: typeof req.body.genre === "undefined" ? [] : req.body.genre,
+      _id: req.params.id, //This is required, or a new ID will be assigned!
+    });
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+
+      // Get all authors and genres for form.
+      async.parallel(
+        {
+          authors(callback) {
+            Author.find(callback);
+          },
+          genres(callback) {
+            Genre.find(callback);
+          },
+        },
+        (err, results) => {
+          if (err) {
+            return next(err);
+          }
+
+          // Mark our selected genres as checked.
+          for (const genre of results.genres) {
+            if (book.genre.includes(genre._id)) {
+              genre.checked = "true";
+            }
+          }
+          res.render("book_form", {
+            title: "Update Book",
+            authors: results.authors,
+            genres: results.genres,
+            book,
+            errors: errors.array(),
+          });
+        }
+      );
+      return;
+    }
+
+    // Data from form is valid. Update the record.
+    Book.findByIdAndUpdate(req.params.id, book, {}, (err, thebook) => {
+      if (err) {
+        return next(err);
+      }
+
+      // Successful: redirect to book detail page.
+      res.redirect(thebook.url);
+    });
+  },
+];
+```
+
+Esto es muy similar a la ruta `POST` utilizada al crear un libro. Primero validamos y desinfectamos los datos del libro del formulario y los usamos para crear un nuevo objeto Libro (estableciendo su valor `_id` en el id del objeto para actualizar). Si hay errores cuando validamos los datos, volvemos a renderizar el formulario, mostrando además los datos ingresados por el usuario, los errores y las listas de géneros y autores. Si no hay errores, llamamos a `Book.findByIdAndUpdate()` para actualizar el documento del libro y luego redirigir a su página de detalles.
+
+### Vista
+
+No es necesario cambiar la vista del formulario (`/views/book_form.pug`) ya que el mismo código funciona tanto para crear como para actualizar el libro.
+
+### Agregar un botón de actualización
+
+Abre la vista `book_detail.pug` y asegúrate de que haya enlaces para eliminar y actualizar libros en la parte inferior de la página, como se muestra a continuación.
+
+```jade
+  hr
+  p
+    a(href=book.url+'/delete') Delete Book
+  p
+    a(href=book.url+'/update') Update Book
+```
+
+### ¿Cómo se ve?
+
+Ejecuta la aplicación, abre tu navegador en [http://localhost:3000/](http://localhost:3000/), luego selecciona el enlace `All books`. Si todo está configurado correctamente, tu sitio debería parecerse a la siguiente captura de pantalla.
+
+![](/node-express-library-teoria/assets/img/locallibary_express_book_update_noerrors.png)
+
+## Reto
+
+> -info-Crea el resto de páginas para borrar y actualizar objetos
+
