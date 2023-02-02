@@ -941,3 +941,8 @@ Ejecuta la aplicación y abre el navegador en [http://localhost:3000/](http://lo
 
 ![Author Detail Page - Express Local Library site](/node-express-library-teoria/assets/img/locallibary_express_author_detail.png)
 
+## Página detalle BookInstance
+
+> -reto-Realiza la página de detalle para BookInstace
+
+![BookInstance Detail Page - Express Local Library site](/node-express-library-teoria/assets/img/locallibary_express_bookinstance_detail.png)
