@@ -209,7 +209,7 @@ El archivo de plantilla de ejemplo a continuación muestra muchas de las caracte
 
 Lo primero que debes notar es que el archivo mapea la estructura de un archivo HTML típico, con la primera palabra en (casi) cada línea siendo un elemento HTML, y la sangría se usa para indicar elementos anidados. Entonces, por ejemplo, el elemento del cuerpo está dentro de un elemento html y los elementos de párrafo (p) están dentro del elemento del cuerpo, etc. Los elementos no anidados (por ejemplo, párrafos individuales) están en líneas separadas.
 
-```pug
+```bash
 doctype html
 html(lang="en")
   head
@@ -246,7 +246,7 @@ html(lang="en")
 
 Los atributos de los elementos se definen entre paréntesis después de su elemento asociado. Dentro de los paréntesis, los atributos se definen en listas separadas por comas o espacios en blanco de los pares de nombres de atributos y valores de atributos, por ejemplo:
 
-```jade
+```bash
 script(type='text/javascript'), link(rel='stylesheet', href='/stylesheets/style.css')
 meta(name='viewport' content='width=device-width initial-scale=1')
 ```
@@ -255,14 +255,14 @@ Los valores de todos los atributos se escapan (por ejemplo, los caracteres como 
 
 Si una etiqueta va seguida del signo igual, el siguiente texto se trata como una expresión de JavaScript. Entonces, por ejemplo, en la primera línea a continuación, el contenido de la etiqueta `h1` será un título variable (ya sea definido en el archivo o pasado a la plantilla desde Express). En la segunda línea, el contenido del párrafo es una cadena de texto concatenada con la variable de título. En ambos casos, el comportamiento predeterminado es escapar de la línea.
 
-```jade
+```bash
 h1= title
 p= 'Evaluated and <em>escaped expression</em>:' + title
 ```
 
 Si no hay un símbolo de igual después de la etiqueta, el contenido se trata como texto sin formato. Dentro del texto sin formato, puedes insertar datos con y sin escape usando la sintaxis `#{}` y `!{}` respectivamente, como se muestra a continuación. También puedes agregar HTML sin procesar dentro del texto sin formato.
 
-```jade
+```bash
 p This is a line with #[em some emphasis] and #[strong strong text] markup.
 p This line has an un-escaped string: !{'<em> is emphasized</em>'}, an escaped string: #{'<em> is not emphasized</em>'}, and escaped variables: #{title}.
 ```
@@ -271,14 +271,14 @@ p This line has an un-escaped string: !{'<em> is emphasized</em>'}, an escaped s
 
 Puedes utilizar el carácter de barra vertical (`|`) al principio de una línea para indicar "texto sin formato". Por ejemplo, el texto adicional que se muestra a continuación se mostrará en la misma línea que el ancla anterior, pero no estará vinculado.
 
-```jade
+```bash
 a(href='http://someurl/') Link text
 | Plain text
 ```
 
 Pug te permite realizar operaciones condicionales usando `if`, `else`, `else if` y `unless`, por ejemplo:
 
-```jade
+```bash
 if title
   p A variable named "title" exists
 else
@@ -287,7 +287,7 @@ else
 
 También puedes realizar operaciones de bucle/iteración utilizando la sintaxis `each-in` o `while`. En el fragmento de código a continuación, hemos recorrido una matriz para mostrar una lista de variables (ten en cuenta el uso de '`li =`' para evaluar el "`val`" como una variable a continuación. El valor que itera también se puede pasar al plantilla como una variable!
 
-```jade
+```bash
 ul
   each val in [1, 2, 3, 4, 5]
     li= val
@@ -301,7 +301,7 @@ En un sitio, es habitual que todas las páginas tengan una estructura común, in
 
 Por ejemplo, la plantilla base `layout.pug` creada en nuestro proyecto de esqueleto se ve así:
 
-```jade
+```bash
 doctype html
 html
   head
@@ -315,7 +315,7 @@ La etiqueta `block` se usa para marcar secciones de contenido que se pueden reem
 
 El `index.pug` predeterminado (creado para nuestro proyecto de esqueleto) muestra cómo anulamos la plantilla base. La etiqueta `extends` identifica la plantilla base a usar y luego usamos el bloque `section_name` para indicar el nuevo contenido de la sección que anularemos.
 
-```jade
+```bash
 extends layout
 
 block content
@@ -329,7 +329,7 @@ Ahora que entendemos cómo extender plantillas usando Pug, comencemos creando un
 
 Abre `/views/layout.pug` y reemplace el contenido con el siguiente código.
 
-```jade
+```bash
 doctype html
 html(lang='en')
   head
@@ -477,7 +477,7 @@ En caso de éxito, la función de devolución de llamada llama a `res.render()`,
 
 Abre `/views/index.pug` y reemplaza su contenido con el texto a continuación.
 
-```jade
+```bash
 extends layout
 
 block content
@@ -545,7 +545,7 @@ En caso de éxito, la devolución de llamada pasada a la consulta representa la 
 
 Crea `/views/book_list.pug` y copie el texto a continuación.
 
-```jade
+```bash
 extends layout
 
 block content
@@ -573,7 +573,7 @@ De interés aquí es que cada libro se define como dos líneas, utilizando la tu
 
 > -reto-Crea el controlador que muestre todas las instancias de libros. La plantilla es la siguiente:
 >
-> ```jade
+> ```bash
 > extends layout
 > 
 > block content
@@ -730,7 +730,7 @@ La vista renderizada es `gender_detail` y se le pasan variables para el título,
 
 Crea `views/genre_detail.pug` y pega el siguiente código:
 
-```jade
+```bash
 extends layout
 
 block content
@@ -805,7 +805,7 @@ exports.book_detail = (req, res, next) => {
 
 Crea `/views/book_detail.pug` y pega el siguiente código:
 
-```jade
+```bash
 extends layout
 
 block content
@@ -844,7 +844,7 @@ block content
 
 > -info-La lista de géneros asociados con el libro se implementa en la plantilla como se muestra a continuación. Esto agrega una coma después de cada género asociado con el libro excepto el último.
 >
-> ```jade
+> ```bash
 >   p #[strong Genre:]
 >     each val, index in book.genre
 >       a(href=val.url) #{val.name}
@@ -913,7 +913,7 @@ El método usa `async.parallel()` para consultar al autor y sus instancias de li
 
 Crea `views/authorDetail.pug` y pega el siguiente código:
 
-```jade
+```bash
 extends layout
 
 block content
