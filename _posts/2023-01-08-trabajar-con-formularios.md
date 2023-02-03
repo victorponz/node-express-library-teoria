@@ -354,7 +354,7 @@ res.render("genre_form", {
 
 Crea `/views/genre_form.pug` y copia el texto a continuación.
 
-```jade
+```bash
 extends layout
 
 block content
@@ -479,7 +479,7 @@ exports.author_create_post = [
 
 Crea `/views/author_form.pug` y copia el texto a continuación.
 
-```jade
+```bash
 extends layout
 
 block content
@@ -692,7 +692,7 @@ for (const genre of results.genres) {
 
 Crea el archivo `book_form.pug` y pega el siguiente código:
 
-```jade
+```bash
 extends layout
 
 block content
@@ -795,7 +795,7 @@ El controlador obtiene una lista de todos los libros (`book_list`) y la pasa a l
 
 Crea `/views/bookinstance_form.pug` y copie el texto a continuación.
 
-```jade
+```bash
 extends layout
 
 block content
@@ -940,7 +940,7 @@ Primero validamos que se haya proporcionado una identificación (esto se envía 
 
 Crea `/views/author_delete.pug` y copia el texto a continuación.
 
-```jade
+```bash
 extends layout
 
 block content
@@ -983,7 +983,7 @@ A continuación, agregaremos un control `Delete` a la vista de detalles del auto
 
 Abre la vista `author_detail.pug` y agrega las siguientes líneas en la parte inferior.
 
-```jade
+```bash
 hr
 p
   a(href=author.url+'/delete') Delete author
@@ -1158,7 +1158,7 @@ No es necesario cambiar la vista del formulario (`/views/book_form.pug`) ya que 
 
 Abre la vista `book_detail.pug` y asegúrate de que haya enlaces para eliminar y actualizar libros en la parte inferior de la página, como se muestra a continuación.
 
-```jade
+```bash
   hr
   p
     a(href=book.url+'/delete') Delete Book
