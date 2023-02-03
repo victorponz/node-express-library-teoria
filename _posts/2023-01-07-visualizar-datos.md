@@ -175,7 +175,7 @@ npm install async
 
 Una plantilla es un archivo de texto que define la estructura o el diseño de un archivo de salida, con marcadores de posición que se utilizan para representar dónde se insertarán los datos cuando se represente la plantilla (en Express, las plantillas se denominan vistas).
 
-### Opciones de plantilla Expressd
+### Opciones de plantilla Express
 
 Express se puede utilizar con muchos motores de representación de plantillas diferentes. En este tutorial usamos Pug (anteriormente conocido como Jade) para nuestras plantillas. Este es el lenguaje de plantillas de Node más popular y se describe a sí mismo como una "sintaxis limpia y sensible a los espacios en blanco para escribir HTML, fuertemente influenciada por [Haml](https://haml.info/)".
 
@@ -209,7 +209,7 @@ El archivo de plantilla de ejemplo a continuación muestra muchas de las caracte
 
 Lo primero que debes notar es que el archivo mapea la estructura de un archivo HTML típico, con la primera palabra en (casi) cada línea siendo un elemento HTML, y la sangría se usa para indicar elementos anidados. Entonces, por ejemplo, el elemento del cuerpo está dentro de un elemento html y los elementos de párrafo (p) están dentro del elemento del cuerpo, etc. Los elementos no anidados (por ejemplo, párrafos individuales) están en líneas separadas.
 
-```jade
+```pug
 doctype html
 html(lang="en")
   head
