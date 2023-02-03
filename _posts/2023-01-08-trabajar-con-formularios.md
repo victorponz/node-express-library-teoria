@@ -503,11 +503,11 @@ block content
 
 > -alert-Algunos navegadores no admiten el tipo de entrada `= "date"`, por lo que no obtendrás el widget selector de fecha o el marcador de posición predeterminado `dd/mm/yyyy`, sino que obtendrás un campo de texto sin formato vacío. Una solución es agregar explícitamente el placeholder `= 'dd/mm/yyyy'` para que en los navegadores menos capaces aún obtengaa información sobre el formato de texto deseado.
 
-> -reto-A la plantilla anterior le falta un campo para ingresar `date-of_death` Crea el campo siguiendo el mismo patrón que el grupo de formulario de fecha de nacimiento!
+> -reto-**Reto** A la plantilla anterior le falta un campo para ingresar `date-of_death` Crea el campo siguiendo el mismo patrón que el grupo de formulario de fecha de nacimiento!
 
 ### ¿Cómo se ve?
 
-Ejecuta la aplicación, abra su navegador en [http://localhost:3000/](http://localhost:3000/), luego selecciona el enlace `Create new author`. Si todo está configurado correctamente, tu sitio debería parecerse a la siguiente captura de pantalla. Después de ingresar un valor, debe guardarse y accederás a la página de detalles del autor.
+Ejecuta la aplicación, abre el navegador en [http://localhost:3000/](http://localhost:3000/), luego selecciona el enlace `Create new author`. Si todo está configurado correctamente, tu sitio debería parecerse a la siguiente captura de pantalla. Después de ingresar un valor, debe guardarse y accederás a la página de detalles del autor.
 
 ![](/node-express-library-teoria/assets/img/locallibary_express_author_create_empty.png)
 
