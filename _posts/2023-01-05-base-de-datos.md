@@ -134,7 +134,7 @@ Luego, los esquemas se "compilan" en modelos utilizando el método `mongoose.mod
 
 ### Definir schemas
 
-El siguiente fragmento de código muestra cómo se puede definir un esquema simple. Primero usas `requiere()` mongoose, luego usas el constructor de esquema para crear una nueva instancia de esquema, definiendo los diversos campos dentro de él en el parámetro de objeto del constructor.
+El siguiente fragmento de código muestra cómo se puede definir un esquema simple. Primero usas `requiere(mongoose)` , luego usas el constructor de esquema para crear una nueva instancia de esquema, definiendo los diversos campos dentro de él en el parámetro de objeto del constructor.
 
 ```javascript
 // Require Mongoose
@@ -474,6 +474,46 @@ SomeModel.find(callback_function);
 
 Ahora que entendemos algo de lo que Mongoose puede hacer y cómo queremos diseñar nuestros modelos, es hora de comenzar a trabajar en el sitio web de LocalLibrary. Lo primero que queremos hacer es configurar una base de datos MongoDB que podamos usar para almacenar los datos de nuestra biblioteca.
 
+### Usar localhost
+
+Primero hemos de instalar MongoDB. En el momento de escribir este tutorial, la versión que existe en el repositorio de Ubuntu es incompatible con algunas librerías del sistema por lo que no se puede instalar desde esos repos
+
+Usa los siguientes comandos:
+
+```bash
+wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc |  gpg --dearmor | sudo tee /usr/share/keyrings/mongodb.gpg > /dev/null
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+sudo apt update
+sudo apt install mongodb-org
+sudo chown -R mongodb:mongodb /var/lib/mongodb
+```
+
+Luego inicia el servicio mediante 
+
+```
+sudo systemctl start mongod
+```
+
+Y haz que inicie automáticamente como un servicio al arrancar la máquina.
+
+```
+sudo systemctl enable mongod
+```
+
+Para conectar desde la línea de comandos usa:
+
+```
+mongosh
+```
+
+Y para crear una Colección, usa
+
+```
+use local_library
+```
+
+### Usar MongoDB Atlas
+
 Para este tutorial, vamos a utilizar la base de datos sandbox alojada en la nube de [MongoDB Atlas](https://www.mongodb.com/atlas/database). Este nivel de base de datos no se considera adecuado para sitios web de producción porque no tiene redundancia, pero es excelente para el desarrollo y la creación de prototipos. Lo estamos usando aquí porque es gratis y fácil de configurar, y porque MongoDB Atlas es una base de datos popular como proveedor de servicios que podría elegir razonablemente para su base de datos de producción (otras opciones populares en el momento de escribir este artículo incluyen [Compose](https://www.compose.com/), [ScaleGrid](https://scalegrid.io/pricing.html) y [ObjectRocket](https://www.objectrocket.com/)).
 
 Primero deberás [crear una cuenta con MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register) (esto es gratis y solo requiere que ingreses los datos de contacto básicos y reconozcas sus términos de servicio).
@@ -525,7 +565,7 @@ Después de iniciar sesión, accederá a la pantalla de [inicio](https://cloud.m
 
    ![](/node-express-library-teoria/assets/img/mongodb_atlas_-_databasedetails.jpg)
 
-   * Introducr el nombre de la nueva base de datos como `local_library`.
+   * Introducir el nombre de la nueva base de datos como `local_library`.
    * Introduce el nombre de la colección como Collection0.
    * Haga clic en el botón Crear para crear la base de datos.
 
@@ -569,7 +609,7 @@ npm install mongoose
 
 ### Conectar a la base de datos
 
-Abre `/app.js` (en la raíz de tu proyecto) y copia el siguiente texto debajo donde declara el objeto de la aplicación Express (después de la línea `var app = express();`). Reemplaza la cadena de URL de la base de datos ('insert_your_database_url_here') con la ubicación URL que representa su propia base de datos (es decir, utilizando la información de mongoDB Atlas).
+Abre `/app.js` (en la raíz de tu proyecto) y copia el siguiente texto debajo donde declara el objeto de la aplicación Express (después de la línea `var app = express();`). Reemplaza la cadena de URL de la base de datos ('insert_your_database_url_here') con la ubicación URL que representa su propia base de datos (es decir, utilizando la información de mongoDB Atlas o de localhost).
 
 ```javascript
 // Set up mongoose connection
@@ -582,6 +622,20 @@ async function main() {
   await mongoose.connect(mongoDB);
 }
 ```
+
+En nuestro caso la url de la base de datos en localhost es:
+
+```
+mongodb://127.0.0.1:27017/library
+```
+
+y en Atlas
+
+```
+mongodb+srv://tu_nombre_de_usuario:tu_contraseña@tu-nombre-de-cluster/local_library?retryWrites=true&w=majority
+```
+
+
 
 ## Definir el esquema
 
@@ -732,7 +786,7 @@ Eso es. ¡Ya tenemos todos los modelos para el sitio configurados!
 
 Para probar los modelos (y crear algunos libros de ejemplo y otros elementos que podemos usar en nuestros próximos artículos), ahora ejecutaremos un script independiente para crear elementos de cada tipo:
 
-1. Descarga el archivo [populatedb.js](/node-express-library-teoria/assets/populatedb.js) dentro de tu directorio express-locallibrary-tutorial (en el mismo nivel que package.json).
+1. Descarga el archivo [populatedb.js](/node-express-library-teoria/assets/populatedb.js) dentro de tu directorio express-locallibrary-tutorial (en el mismo nivel que `package.json`).
 
 2. Introduce los siguientes comandos en la raíz del proyecto para instalar el módulo `async` que requiere el script
 
@@ -740,10 +794,10 @@ Para probar los modelos (y crear algunos libros de ejemplo y otros elementos que
    npm install async
    ```
 
-3. Ejecuta el script usando node en el símbolo del sistema, pasando la URL de su base de datos MongoDB (la misma con la que reemplazaste el marcador de posición `insert_your_database_url_here`, dentro de app.js anteriormente):
+3. Ejecuta el script usando `node` en el símbolo del sistema, pasando la URL de su base de datos MongoDB (la misma con la que reemplazaste el marcador de posición `insert_your_database_url_here`, dentro de `app.js` anteriormente):
 
    ```
-   node populatedb <your mongodb url>
+   node populatedb <tu-url-de-mongo>
    ```
 
 4. El script debe ejecutarse hasta su finalización, mostrando los elementos a medida que los crea en la terminal.
