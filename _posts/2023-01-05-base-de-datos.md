@@ -92,7 +92,7 @@ Esta sección proporciona una descripción general de cómo conectar Mongoose a 
 Mongoose se instala en el proyecto (`package.json`) como cualquier otra dependencia, usando `npm`. Para instalarlo, use el siguiente comando dentro de la carpeta de su proyecto:
 
 ```
-npm instalar mangoose
+npm instalar mongoose
 ```
 
 La instalación de Mongoose agrega todas sus dependencias, incluido el controlador de la base de datos MongoDB, pero no instala MongoDB en sí. Si deseas instalar un servidor MongoDB, puede descargar [instaladores](https://www.mongodb.com/try/download/community) desde aquí para varios sistemas operativos e instalarlo localmente. También puedes utilizar instancias de MongoDB basadas en la nube.
@@ -115,7 +115,7 @@ mongoose.set('strictQuery', false);
 // Define the database URL to connect to.
 const mongoDB = "mongodb://127.0.0.1/my_database";
 
-// Wait for database to connect, logging an error if there is a problem 
+// Wait for database to connect, logging an error if there is a problem
 main().catch(err => console.log(err));
 async function main() {
   await mongoose.connect(mongoDB);
@@ -196,11 +196,11 @@ La mayoría de los SchemaTypes (los descriptores después de "tipo:" o después 
 
 * `ObjectId`: representa instancias específicas de un modelo en la base de datos. Por ejemplo, un libro podría usar esto para representar su objeto de autor. Esto realmente contendrá la ID única (_id) para el objeto especificado. Podemos usar el método `populate()` para extraer la información asociada cuando sea necesario.
 * [Mixed](https://mongoosejs.com/docs/schematypes.html#mixed): un tipo de esquema arbitrario.
-* `[]`: una matriz de elementos. Puedes realizar operaciones de matriz de JavaScript en estos modelos (push, pop, unshift, etc.). Los ejemplos  anteriores muestran una matriz de objetos sin un tipo específico y una matriz de objetos String, pero puede tener una matriz de cualquier tipo de objeto.
+* `[]`: una matriz de elementos. Puedes realizar operaciones de matriz de JavaScript en estos modelos (`push`, `pop`, `unshift`, etc.). Los ejemplos  anteriores muestran una matriz de objetos sin un tipo específico y una matriz de objetos String, pero puede tener una matriz de cualquier tipo de objeto.
 
 El código también muestra ambas formas de declarar un campo:
 
-* Nombre y tipo de campo como un par clave-valor (es decir, como se hizo con los campos nombre, binario y vivo).
+* Nombre y tipo de campo como un par clave-valor (es decir, como se hizo con los campos `name`, `binary` y `living`).
 * Nombre de campo seguido de un objeto que define el tipo y cualquier otra opción para el campo. Las opciones incluyen cosas como:
   * valores predeterminados.
   * validadores incorporados (por ejemplo, valores máximos/mínimos) y funciones de validación personalizadas.
@@ -257,7 +257,7 @@ Para obtener más información, consulta [Virtuals](https://mongoosejs.com/docs/
 
 Una vez que hayas creado un esquema, puedes usarlo para crear modelos. El modelo representa una colección de documentos en la base de datos que puedes buscar, mientras que las instancias del modelo representan documentos individuales que puede guardar y recuperar.
 
-Ofrecemos una breve descripción a continuación. Para obtener más información, consulta: [Modelos](https://mongoosejs.com/docs/models.html) 
+Ofrecemos una breve descripción a continuación. Para obtener más información, consulta: [Modelos](https://mongoosejs.com/docs/models.html)
 
 ### Crear y modificar documentos
 
@@ -508,12 +508,12 @@ Después de iniciar sesión, accederá a la pantalla de [inicio](https://cloud.m
    > -info-Es una buena práctica limitar las direcciones IP que pueden conectarse a su base de datos y otros recursos. Aquí permitimos una conexión desde cualquier lugar porque no sabemos de dónde vendrá la solicitud después de la implementación.
    >
    >  Haga clic en el botón Finalizar y cerrar.
-   
+
 5. Esto abrirá la siguiente pantalla. Haga clic en el botón Ir a bases de datos.
 
    ![](/node-express-library-teoria/assets/img/mongodb_atlas_-_accessrules.jpg)
 
-6. Volverás a la pantalla  *Database Deployments* . Haz clic en **Browse Collections** 
+6. Volverás a la pantalla  *Database Deployments* . Haz clic en **Browse Collections**
 
    ![](/node-express-library-teoria/assets/img/mongodb_atlas_-_createcollection.jpg)
 
@@ -553,7 +553,7 @@ Después de iniciar sesión, accederá a la pantalla de [inicio](https://cloud.m
     * Inserte el nombre de la base de datos "`local_library`" en la ruta antes de las opciones (...mongodb.net/local_library?retryWrites...)/
     * Guarda el archivo que contiene esta cadena en un lugar seguro.
 
-Ahora has creado la base de datos y tienes una URL (con nombre de usuario y contraseña) que se puede usar para acceder a ella. Esto se verá así: 
+Ahora has creado la base de datos y tienes una URL (con nombre de usuario y contraseña) que se puede usar para acceder a ella. Esto se verá así:
 
 ```
 mongodb+srv://tu_nombre_de_usuario:tu_contraseña@cluster0.lz91hw2.mongodb.net/local_library?retryWrites=true&w=majority
@@ -734,7 +734,7 @@ Para probar los modelos (y crear algunos libros de ejemplo y otros elementos que
 
 1. Descarga el archivo [populatedb.js](/node-express-library-teoria/assets/populatedb.js) dentro de tu directorio express-locallibrary-tutorial (en el mismo nivel que package.json).
 
-2. Introduce los siguientes comandos en la raíz del proyecto para instalar el módulo `async` que requiere el script 
+2. Introduce los siguientes comandos en la raíz del proyecto para instalar el módulo `async` que requiere el script
 
    ```
    npm install async
